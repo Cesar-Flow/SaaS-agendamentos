@@ -16,7 +16,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/auth', authRoutes);
-app.user('/users', userRoutes);
+app.use('/users', userRoutes);
 
 app.listen(process.env.PORT || 3000, () => {
     console.log("Servidor rodando");
