@@ -5,6 +5,7 @@ const authController = require('./auth.controller');
 const ensureAuthenticated = require("../../core/middlewares/ensureAuthenticated");
 
 router.post('/login', authController.login);
-router.post('/profile', ensureAuthenticated, authController.profile)
+router.post('/register', authController.register);
+router.post('/profile', ensureAuthenticated, authController.profile);
 
 module.exports = router;

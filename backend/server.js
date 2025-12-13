@@ -1,23 +1,37 @@
 require('dotenv').config();
 
 // Config
+const path = require('path');
 const express = require('express');
+const sequelizeProvider = require('./src/core/providers/sequelizeProvider'); 
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded());
 
 const authRoutes = require('./src/modules/auth/auth.routes');
-const userRoutes = require('./src/modules/users/user.routes');
+const clientsRoutes = require('./src/modules/clients/clients.routes');
+// const errorMiddleware = require('./src/core/errors/errorMiddleware');
 
-// Routes
-app.get('/', (req, res) => {
-    res.send("Olá, mundo!");
-});
+// Rodando servidor
+async function runServer() {
+    try {
+        // Sincronizando banco de dados
+        await sequelizeProvider.sync({ alter: true });
+        console.log("Banco sincronizado");
 
-app.use('/auth', authRoutes);
-app.use('/users', userRoutes);
+        // Rotas
+        //app.use(express.static(path.join(__dirname, 'html')));
+        app.use('/auth', authRoutes);
+        app.use('/clients', clientsRoutes);
 
-app.listen(process.env.PORT || 3000, () => {
-    console.log("Servidor rodando");
-});
+        // Expondo porta padrão
+        app.listen(process.env.PORT || 3000, () => {
+            console.log("Servidor rodando");
+        });
+    } catch (err) {
+        console.error('Erro ao iniciar servidor: ', err);
+    }
+}
+
+runServer();
