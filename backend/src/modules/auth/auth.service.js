@@ -1,5 +1,5 @@
-const clientsRepository = require('../clients/clients.repository');
-const clientsService = require('../clients/clients.service');
+const customerRepository = require('../customer/customer.repository');
+const customerService = require('../customer/customer.service');
 
 // Provider
 const jwtProvider = require('../../core/providers/jwtProvider');
@@ -14,7 +14,7 @@ module.exports = {
 
         if (!email || !password) throw new ValidationError('Email e senha são obrigatórios');
 
-        const user = await clientsService.getClientByEmail(email);
+        const user = await customerService.getCustomerByEmail(email);
 
         if (!user) throw new ValidationError('Usuário não encontrado');
 
@@ -40,7 +40,7 @@ module.exports = {
         if (!email || !name || !password) throw new ValidationError('Nome, email e senha são obrigatórios!');
 
         data.password = await bcryptProvider.hash(password);
-        const user = await clientsService.createClient(data);
+        const user = await customerService.createCustomer(data);
 
         const payload = {
             id: user.id,
@@ -57,7 +57,7 @@ module.exports = {
     profile: async (data) => {
         const { id } = data;
 
-        const user = await clientsService.getClientById(id);
+        const user = await customerService.getCustomerById(id);
 
         if (!user) throw new ValidationError('Cliente não encontrado');
 
