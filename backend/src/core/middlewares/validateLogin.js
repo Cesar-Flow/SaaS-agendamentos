@@ -1,13 +1,12 @@
-const { ValidationError } = require('@errors'); 
+const { ValidationError } = require('@errors');
 
 module.exports = (req, res, next) => {
     if (!req.body) throw new ValidationError('Corpo da requisição vazio');
 
-    const { email, password, name } = req.body || {};
+    const { email, password } = req.body || {};
 
     try {
         if (!email) throw new ValidationError('Email é obrigatório');
-        if (!name) throw new ValidationError('Nome é obrigatório');
         if (!password) throw new ValidationError('Senha é obrigatória');
 
         if (typeof email !== 'string') throw new ValidationError('Email inválido');

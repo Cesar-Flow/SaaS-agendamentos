@@ -63,7 +63,7 @@ class AuthService {
                 id: customer.id,
                 email: customer.email,
                 password: customer.password,
-                active: customer.active,
+                active: customer.situation,
                 role: 'customer',
             };
         }
