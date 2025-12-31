@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../../core/providers/sequelizeProvider');
+const { SequelizeProvider } = require('@providers');
 
-const Company = sequelize.define('Company', {
+const Company = SequelizeProvider.db.define('Company', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     name: { type: DataTypes.STRING, allowNull: false },
     email: { type: DataTypes.STRING, allowNull: true },

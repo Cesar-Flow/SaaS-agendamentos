@@ -1,4 +1,4 @@
-const sequelize = require('../core/providers/sequelizeProvider');
+const { SequelizeProvider } = require('@providers');
 
 // Models
 const Appointment = require('./models/Appointment');
@@ -9,7 +9,7 @@ const Platform_admin = require('./models/Platform_admin');
 const Refresh_token = require('./models/Refresh_token');
 const Service = require('./models/Service');
 const Staff = require('./models/Staff');
-const User = require('./models/User');
+const User = require('./models/Staff');
 
 
-module.exports = { sequelize, Appointment, Comp_design_settings, Company, Customer, Platform_admin, Refresh_token, Service, Staff, User };
+module.exports = { SequelizeProvider, Appointment, Comp_design_settings, Company, Customer, Platform_admin, Refresh_token, Service, Staff, User };

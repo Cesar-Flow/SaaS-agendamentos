@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../../core/providers/sequelizeProvider');
+const { SequelizeProvider } = require('@providers');
 
-const Comp_design_settings = sequelize.define('Comp_design_settings', {
+const Comp_design_settings = SequelizeProvider.db.define('Comp_design_settings', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     logo_url: { type: DataTypes.STRING, allowNull: true },
     primary_color: { type: DataTypes.STRING, allowNull: true },

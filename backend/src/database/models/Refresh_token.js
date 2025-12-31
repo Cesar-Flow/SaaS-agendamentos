@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../../core/providers/sequelizeProvider');
+const { SequelizeProvider } = require('@providers');
 
-const Refresh_token = sequelize.define('Refresh_token', {
+const Refresh_token = SequelizeProvider.db.define('Refresh_token', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     token: { type: DataTypes.STRING, allowNull: false },
     expires_at: { type: DataTypes.DATE, allowNull: false },

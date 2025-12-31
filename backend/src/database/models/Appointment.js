@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../../core/providers/sequelizeProvider');
+const { SequelizeProvider } = require('@providers');
 
-const Appointment = sequelize.define('Appointment', {
+const Appointment = SequelizeProvider.db.define('Appointment', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     appointment_date: { type: DataTypes.DATE, allowNull: false },
     start_time: { type: DataTypes.TIME, allowNull: false },

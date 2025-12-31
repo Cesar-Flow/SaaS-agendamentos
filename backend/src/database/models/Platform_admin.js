@@ -1,7 +1,7 @@
 const { DataTypes }  = require('sequelize');
-const sequelize = require('../../core/providers/sequelizeProvider');
+const { SequelizeProvider } = require('@providers');
 
-const Platform_admin = sequelize.define('Platform_admin', {
+const Platform_admin = SequelizeProvider.db.define('Platform_admin', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     name: { type: DataTypes.STRING, allowNull: false },
     email: { type: DataTypes.STRING, allowNull: false },
