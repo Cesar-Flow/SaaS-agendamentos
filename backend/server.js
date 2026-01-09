@@ -9,7 +9,7 @@ const { SequelizeProvider } = require('@providers');
 const { errorHandler } = require('@middlewares');
 
 // Importando os modelos do banco
-const { Appointment, Comp_design_settings, Company, Customer, Platform_admin, Refresh_token, Service, Staff, User } = require('./src/database/index');
+const { Appointment, Comp_design_settings, Company, Customer, Platform_admin, RefreshToken, Service, Staff, User } = require('./src/database/index');
 
 app.use(express.json());
 app.use(express.urlencoded());
@@ -26,6 +26,7 @@ async function runServer() {
 
         await Company.sync({ alter: true });
         await Customer.sync({ alter: true });
+        await RefreshToken.sync({ alter: true });
         //await Service.sync({ alter: true });
         //await Appointment.sync({ alter: true });
 
@@ -34,7 +35,7 @@ async function runServer() {
         // Rotas
         //app.use(express.static(path.join(__dirname, 'html')));
         app.use('/auth', authRoutes);
-        app.use('/customers', customerRoutes);
+        app.use('/customers', customerRoutes); 
 
         app.use(errorHandler);
 

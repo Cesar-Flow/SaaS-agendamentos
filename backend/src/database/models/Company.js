@@ -9,6 +9,7 @@ const Company = SequelizeProvider.db.define('Company', {
     plan_type: { type: DataTypes.STRING, allowNull: false },
 }, {
   timestamps: true, 
+  tableName: 'Company',
 });
 
 module.exports = Company;

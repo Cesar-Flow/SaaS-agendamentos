@@ -5,9 +5,13 @@ const router = express.Router();
 const CustomerService = require("./CustomerService");
 
 // Middlewares
-const { ensureAuthenticated, validateRegister } = require('@middlewares');
+const { ensureAuthenticated, validateRegister, roleValidator } = require('@middlewares');
 
-router.get("/", ensureAuthenticated, async (req, res) => {
+router.use(ensureAuthenticated);
+
+// [ GET ]
+// Retorna todos os clientes ativos
+router.get("/customers", roleValidator('STAFF', 'ADMIN'), async (req, res) => {
   const customers = await CustomerService.getAllActiveCustomers();
   return res.status(201).json(customers);
 });

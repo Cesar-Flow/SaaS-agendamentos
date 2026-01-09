@@ -11,6 +11,7 @@ const Customer = SequelizeProvider.db.define('Customer', {
     situation: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 1 },
 }, {
   timestamps: true, 
+  tableName: 'Customer',
 });
 
 module.exports = Customer;

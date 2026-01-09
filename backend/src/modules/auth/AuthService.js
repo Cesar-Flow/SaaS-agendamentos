@@ -7,32 +7,33 @@ const { AuthError } = require('@errors');
 // Services
 const CustomerService = require('../customer/CustomerService');
 
+// Repository
+const authRepository = require('./auth.repository');
+
 class AuthService {
     async registerCustomer(data) {
-        let user = await CustomerService.createCustomer(data);
+        const { password } = data;
+        let user = await CustomerService.createCustomer({
+            ...data,
+            email: data.email.toLowerCase().trim(),
+            password: await BcryptProvider.hash(password)
+        });
 
-        const payload = {
-            sub: user.id,
-            role: 'customer'
-        };
-
-        return {
-            token: JwtProvider.sign(payload)
-        };
+        return await this.login({
+            email: user.email,
+            password: password
+        });
     }
 
-    async registerStaff(data) {
-        let user = await CustomerService.createCustomer(data);
-    
-        const payload = {
-            sub: user.id,
-            role: 'staff'
-        };
+    // async registerStaff(data) {
+    //     const { password } = data;
+    //     let user = await StaffService.createStaff(data);
 
-        return {
-            token: JwtProvider.sign(payload)
-        };
-    }
+    //     return await this.login({
+    //         email: user.email,
+    //         password: password
+    //     });
+    // }
 
     async login(data) {
         const { email, password } = data;
@@ -48,12 +49,33 @@ class AuthService {
 
         const payload = {
             sub: user.id,
-            role: user.role
+            email: user.email,
+            role: user.role,
+            active: user.active
         };
 
-        return {
-            token: JwtProvider.sign(payload)
-        };
+        const accessToken = JwtProvider.sign(payload, { expiresIn: '15m' });
+        const refreshToken = crypto.randomUUID();
+        const hashRefreshToken = await BcryptProvider.hash(refreshToken);
+
+        await this.saveHashToken({
+            hashToken: hashRefreshToken,
+            userId: user.id
+        });
+
+        return { accessToken, refreshToken };
+    }
+
+    async saveHashToken(data) {
+        const response = await authRepository.saveHashToken(data);
+
+        return response;
+    }
+
+    async getActiveSession(data) {
+        const response = await authRepository.getActiveSession(data);
+
+        return response;
     }
 
     async findUserByEmail(email) {
@@ -72,6 +94,15 @@ class AuthService {
         // fluxo: customer -> staff -> dev
         
         return null;
+    }
+
+    // Verifica no banco se a sessão existe
+    // Verifica no banco se a sessão ainda é valida
+    // Verifica no banco se a sessão pertence ao usuário buscado
+
+    // Caso verdadeiro: Gera um novo access token e retorna
+    async refresh() {
+
     }
 }
 

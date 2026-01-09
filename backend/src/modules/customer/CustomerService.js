@@ -39,12 +39,10 @@ class CustomerService {
 
         if (exists) throw new ValidationError('Cliente já existente');
 
-        const passwordHash = await BcryptProvider.hash(data.password);
-
         const payload = {
             ...data,
             phone: data.phone || null,
-            password: passwordHash,
+            password: data.password,
         };
 
         return customerRepository.createCustomer(payload);
