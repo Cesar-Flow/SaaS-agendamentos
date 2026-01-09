@@ -15,3 +15,8 @@ O frontend é produzido em Flutter.
 2. Execute o device instalado no Android Studio.
 3. Execute no terminal: `flutter pub get`. Instala as dependências.
 4. Execute no terminal: `flutter run`. Executa o Flutter. Vai aparecer opções de conexão, escolha o do Android. A primeira vez que executa demora, mas depois fica mais rápido.
+
+## Arquitetura
+
+A arquitetura do app é construída usando como base o modelo MVVM descrito pelo próprio site oficial do Flutter: <https://docs.flutter.dev/app-architecture/guide>
+![Arquitetura App Flutter](docs/images/modelo%20arquitetura.png)
