@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../components/bottomNav.dart';
+import '../../components/bottom_nav.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -11,10 +11,6 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Example')),
-      body: Text('App'),
-      bottomNavigationBar: BottomNav(),
-    );
+    return Column(children: [Text("Home")]);
   }
 }
