@@ -34,8 +34,8 @@ class CustomerService {
     }
 
     // Cria um novo cliente
-    async createCustomer(data) {
-        const exists = await customerRepository.getCustomerByEmail(data.email);
+    async createCustomer(data, transaction = null) {
+        const exists = await customerRepository.getCustomerByEmail(data.email, transaction);
 
         if (exists) throw new ValidationError('Cliente já existente');
 
@@ -45,8 +45,9 @@ class CustomerService {
             password: data.password,
         };
 
-        return customerRepository.createCustomer(payload);
+        return customerRepository.createCustomer(payload, transaction);
     }
+
 }
 
 module.exports = new CustomerService();

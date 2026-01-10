@@ -1,40 +1,54 @@
-const { Customer } = require('../../database/index')
+const { Customer } = require('../../database/index');
 
 module.exports = {
-     createCustomer: async (dataUser) => {
-        return await Customer.create({ 
-            name: dataUser.name,
-            email: dataUser.email,
-            password: dataUser.password,
-            phone: dataUser.phone,
-        });
+    // Cria um novo cliente
+    createCustomer: async (dataUser, transaction = null) => {
+        return await Customer.create(
+            { 
+                name: dataUser.name,
+                email: dataUser.email,
+                password: dataUser.password,
+                phone: dataUser.phone,
+            },
+            { transaction }
+        );
     },
 
-    getCustomerById: async (id) => {
-        return await Customer.findByPk(id);
+    // Busca cliente por ID
+    getCustomerById: async (id, transaction = null) => {
+        return await Customer.findByPk(id, { transaction });
     },
 
-    getCustomerByEmail: async (email) => {
-        return await Customer.findOne({ where: { email } });
+    // Busca cliente por email
+    getCustomerByEmail: async (email, transaction = null) => {
+        return await Customer.findOne({ where: { email }, transaction });
     },
 
-    getAllActiveCustomers: async () => {
-        return await Customer.findAll({ where: { situation: 1 } });
+    // Busca todos clientes ativos
+    getAllActiveCustomers: async (transaction = null) => {
+        return await Customer.findAll({ where: { situation: 1 }, transaction });
     },
 
-    getAllCustomers: async () => { 
-        return await Customer.findAll();
+    // Busca todos clientes
+    getAllCustomers: async (transaction = null) => { 
+        return await Customer.findAll({ transaction });
     },
 
-    updateCustomer: async (id, data) => {
-        const customer = await Customer.findByPk(id);
+    // Atualiza cliente
+    updateCustomer: async (id, data, transaction = null) => {
+        const customer = await Customer.findByPk(id, { transaction });
         if (!customer) return null;
-        return await Customer.update(data);
+
+        await Customer.update(data, { where: { id }, transaction });
+        return await Customer.findByPk(id, { transaction }); // retorna o registro atualizado
     },
 
-    deleteCustomer: async (id) => {
-        const customer = await Customer.findByPk(id);
+    // Deleta cliente (soft delete)
+    deleteCustomer: async (id, transaction = null) => {
+        const customer = await Customer.findByPk(id, { transaction });
         if (!customer) return null;
-        return await Customer.update({ situation: 0 });
+
+        await Customer.update({ situation: 0 }, { where: { id }, transaction });
+        return await Customer.findByPk(id, { transaction }); // retorna o registro “deletado”
     },
 };
