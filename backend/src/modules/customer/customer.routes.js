@@ -5,7 +5,7 @@ const router = express.Router();
 const CustomerService = require("./CustomerService");
 
 // Middlewares
-const { ensureAuthenticated, validateRegister, roleValidator } = require('@middlewares');
+const { ensureAuthenticated, roleValidator } = require('@middlewares');
 
 router.use(ensureAuthenticated);
 
@@ -16,7 +16,7 @@ router.get("/customers", roleValidator('STAFF', 'ADMIN'), async (req, res) => {
   return res.status(201).json(customers);
 });
 
-router.post("/", validateRegister, async (req, res) => {
+router.post("/", async (req, res) => {
   const customerData = req.body;
 
   const customer = await CustomerService.createCustomer(customerData);

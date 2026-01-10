@@ -8,13 +8,25 @@ module.exports = {
         });
     },
 
-    getActiveSession: async (data) => {
+    // getActiveSession: async (data) => {
+    //     return await RefreshToken.findOne({
+    //         where: { 
+    //             user_id: data.userId,
+    //             expired: false,
+    //             revoked: false
+    //         }
+    //     });
+    // },
+
+    getSessionById: async (sessionId) => {
         return await RefreshToken.findOne({
-            where: { 
-                user_id: data.userId,
+            attributes: ['id', 'hash_token', 'user_id'],
+            where: {
+                id: sessionId,
                 expired: false,
                 revoked: false
-            }
+            },
+            raw: true
         });
     },
 }

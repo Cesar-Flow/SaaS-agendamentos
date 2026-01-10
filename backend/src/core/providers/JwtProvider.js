@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 
 class JwtProvider {
-    constructor(secret, expiresIn = '2d') {
+    constructor(secret, expiresIn = '15m') {
         this.secret = secret || process.env.JWT_SECRET;
         this.expiresIn = expiresIn;
     }

@@ -11,6 +11,7 @@ const CustomerService = require('../customer/CustomerService');
 const authRepository = require('./auth.repository');
 
 class AuthService {
+    // Registra o novo cliente e faz o login automático caso funcione
     async registerCustomer(data) {
         const { password } = data;
         let user = await CustomerService.createCustomer({
@@ -25,6 +26,7 @@ class AuthService {
         });
     }
 
+    // Registra o novo staff e faz o login automático caso funcione
     // async registerStaff(data) {
     //     const { password } = data;
     //     let user = await StaffService.createStaff(data);
@@ -35,6 +37,7 @@ class AuthService {
     //     });
     // }
 
+    // Tenta fazer o login do usuário
     async login(data) {
         const { email, password } = data;
         let user = await this.findUserByEmail(email);
@@ -54,30 +57,80 @@ class AuthService {
             active: user.active
         };
 
-        const accessToken = JwtProvider.sign(payload, { expiresIn: '15m' });
+        const accessToken = JwtProvider.sign(payload);
+
         const refreshToken = crypto.randomUUID();
         const hashRefreshToken = await BcryptProvider.hash(refreshToken);
 
-        await this.saveHashToken({
+        const tokenEntity = await this.saveHashToken({
             hashToken: hashRefreshToken,
             userId: user.id
         });
 
-        return { accessToken, refreshToken };
+        return { 
+            accessToken, refreshToken, sessionId: tokenEntity.id,
+            user: {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                role: 'customer',
+            }
+        };
     }
 
+    // Salva RefreshToken no banco
     async saveHashToken(data) {
-        const response = await authRepository.saveHashToken(data);
+        const tokenEntity = await authRepository.saveHashToken(data);
 
-        return response;
+        return tokenEntity;
     }
 
+    // Verifica se um usuário tem sessão ativa
     async getActiveSession(data) {
-        const response = await authRepository.getActiveSession(data);
+        const response = await authRepository.getSessionById(data);
 
         return response;
     }
 
+    async me(data) {
+        const parts = data.split('.');
+        if (parts.length !== 2) throw new AuthError('Sessão inválida');
+
+        const [sessionId, refreshToken] = parts;
+
+        if (!sessionId || !refreshToken) throw new AuthError('Sessão inválida');
+
+        const session = await authRepository.getSessionById(sessionId);
+
+        if (!session) throw new AuthError('Sessão inválida');
+
+        const isValid = await BcryptProvider.compare(refreshToken, session.hash_token);
+
+        if (!isValid) throw new AuthError('Sessão inválida');
+
+        const user = await CustomerService.getCustomerById(session.user_id);
+
+        if (!user) throw new AuthError('Sessão inválida');
+
+        const payload = {
+            sub: user.id,
+            email: user.email,
+            role: user.role,
+            active: user.active
+        };
+
+        return {
+            accessToken: await JwtProvider.sign(payload),
+            user: {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                role: 'customer',
+            }
+        };
+    }
+
+    // Verifica se um email já pertence a um usuário
     async findUserByEmail(email) {
         const customer = await CustomerService.getCustomerByEmail(email);
         if (customer) {

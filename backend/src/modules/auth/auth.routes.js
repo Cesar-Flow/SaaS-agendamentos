@@ -4,7 +4,7 @@ const router = express.Router();
 const AuthService = require('./AuthService');
 
 // Middlewares
-const { ensureAuthenticated, generalValidator } = require('@middlewares');
+const { ensureAuthenticated, generalValidator, ensureSession } = require('@middlewares');
 
 // [ POST ]
 // Rota de registo do usuário final
@@ -41,30 +41,28 @@ router.post('/login',
     }),
     async (req, res) => {
     const response = await AuthService.login(req.body);
-    return res.status(200).json({ 
-        success: true, accessToken: response.accessToken, 
-        refreshToken: response.refreshToken 
+
+    res.cookie('session',`${response.sessionId}.${response.refreshToken}`,{
+       httpOnly: true,
+       secure: false,
+       sameSite: 'lax' 
     });
+
+    return res.status(200).json({ success: true, accessToken: response.accessToken });
 });
 
-// router.post('/save', async (req, res) => {
-//     const response = await AuthService.saveHashToken(req.body);
-//     return res.status(201).json({ response });
-// }); 
-
-// router.get('/session', async (req, res) => {
-//     const response = await AuthService.getActiveSession(req.body);
-//     return res.status(200).json({ response });
-// });
-
 // Rota de refresh do access token
-
 // Após expirar um access token, o front envia a requisição e um novo token é gerado e retornado
 router.post('/refresh', ensureAuthenticated, async (req, res) => {
     // logica
 });
 
+// [ GET ]
+// Rota de verificação para login automático
+router.get('/me', ensureSession, async (req, res) => {
+    const response = await AuthService.me(req.cookies.session);
 
-// router.post('/profile', ensureAuthenticated, authService.profile);
+    return res.status(200).json(response);
+});
 
 module.exports = router;

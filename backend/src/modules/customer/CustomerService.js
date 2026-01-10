@@ -11,7 +11,7 @@ class CustomerService {
     // Getters
     // Busca um cliente especifico pelo ID
     async getCustomerById(customerId) {
-        const customer = await customerRepository.getCustomerById(id);
+        const customer = await customerRepository.getCustomerById(customerId);
 
         if (!customer) throw new ValidationError('Cliente não encontrado');
 

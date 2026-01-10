@@ -4,6 +4,7 @@ require('dotenv').config();
 // Config
 const express = require('express');
 const app = express();
+const cookieParser = require('cookie-parser');
 
 const { SequelizeProvider } = require('@providers');
 const { errorHandler } = require('@middlewares');
@@ -13,6 +14,7 @@ const { Appointment, Comp_design_settings, Company, Customer, Platform_admin, Re
 
 app.use(express.json());
 app.use(express.urlencoded());
+app.use(cookieParser());
 
 const authRoutes = require('./src/modules/auth/auth.routes');
 const customerRoutes = require('./src/modules/customer/customer.routes'); 
