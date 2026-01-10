@@ -29,4 +29,18 @@ module.exports = {
             raw: true
         });
     },
+
+    revokeSession: async (data) => {
+        const [affectedRows] = await RefreshToken.update({
+            revoked: data.revoked,
+            reason: data.reason
+        },
+        {
+            where: {
+                id: data.sessionId
+            }
+        });
+
+        return affectedRows > 0;
+    }
 }

@@ -45,7 +45,8 @@ router.post('/login',
     res.cookie('session',`${response.sessionId}.${response.refreshToken}`,{
        httpOnly: true,
        secure: false,
-       sameSite: 'lax' 
+       sameSite: 'lax',
+       path: '/'
     });
 
     return res.status(200).json({ success: true, accessToken: response.accessToken });
@@ -53,9 +54,27 @@ router.post('/login',
 
 // Rota de refresh do access token
 // Após expirar um access token, o front envia a requisição e um novo token é gerado e retornado
-router.post('/refresh', ensureAuthenticated, async (req, res) => {
+router.post('/refresh', ensureSession, async (req, res) => {
     // logica
 });
+
+// Rota de logout
+router.post('/logout', ensureSession, async (req, res) => {
+    try {
+        await AuthService.logout(req.cookies.session);
+    } catch (err) {
+        console.log(err);
+    }
+
+    res.clearCookie('session', {
+        httpOnly: true,
+        secure: false,
+        sameSite: 'lax'
+    });
+
+    return res.status(204).send();
+});
+
 
 // [ GET ]
 // Rota de verificação para login automático

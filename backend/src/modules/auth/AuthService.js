@@ -78,6 +78,35 @@ class AuthService {
         };
     }
 
+    async isSessionValid(sessionId, refreshToken) {
+        if (!sessionId || !refreshToken) throw new AuthError('Sessão inválida');
+
+        const session = await authRepository.getSessionById(sessionId);
+
+        if (!session) throw new AuthError('Sessão inválida');
+
+        const isValid = await BcryptProvider.compare(refreshToken, session.hash_token);
+
+        if (!isValid) throw new AuthError('Sessão inválida');
+
+        return true
+    }
+
+    async logout(data) {
+        const parts = data.split('.');
+        if (parts.length !== 2) throw new AuthError('Sessão inválida');
+
+        const [sessionId, refreshToken] = parts;
+
+        await this.isSessionValid(sessionId, refreshToken);
+
+        return await authRepository.revokeSession({
+            revoked: true,
+            reason: 'logout pelo usuário',
+            sessionId
+        });
+    }
+
     // Salva RefreshToken no banco
     async saveHashToken(data) {
         const tokenEntity = await authRepository.saveHashToken(data);
@@ -98,16 +127,9 @@ class AuthService {
 
         const [sessionId, refreshToken] = parts;
 
-        if (!sessionId || !refreshToken) throw new AuthError('Sessão inválida');
+        await this.isSessionValid(sessionId, refreshToken);
 
         const session = await authRepository.getSessionById(sessionId);
-
-        if (!session) throw new AuthError('Sessão inválida');
-
-        const isValid = await BcryptProvider.compare(refreshToken, session.hash_token);
-
-        if (!isValid) throw new AuthError('Sessão inválida');
-
         const user = await CustomerService.getCustomerById(session.user_id);
 
         if (!user) throw new AuthError('Sessão inválida');
