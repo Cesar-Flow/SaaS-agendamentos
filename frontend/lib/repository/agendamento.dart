@@ -1,4 +1,4 @@
-import 'package:frontend/components/agendamento_card_compacto.dart';
+import 'package:frontend/components/agendamento_card_compact.dart';
 
 class Agendamento {
   String data;
@@ -6,7 +6,7 @@ class Agendamento {
 
   Agendamento({required this.data, required this.horario});
 
-  AgendamentoCardCompacto widgetCardCompacto() {
-    return AgendamentoCardCompacto(data: data, horario: horario);
+  AgendamentoCardCompact widgetCardCompact() {
+    return AgendamentoCardCompact(data: data, horario: horario);
   }
 }

@@ -30,14 +30,14 @@ class ThemeConstants {
   );
 
   // Text Styles
-  static const TextStyle titleStandard = TextStyle(
+  static const TextStyle titleLarge = TextStyle(
     color: titleText,
     fontWeight: FontWeight.normal,
     fontSize: 22,
   );
-  static const TextStyle titleSmall = TextStyle(
+  static const TextStyle titleMedium = TextStyle(
     color: titleText,
-    fontWeight: FontWeight.normal,
+    fontWeight: FontWeight.bold,
     fontSize: 18,
   );
   static const TextStyle bodyLarge = TextStyle(
@@ -63,5 +63,6 @@ class ThemeConstants {
 
   // Spacing/Padding/Margins
   static const double standardSpacing = 16.0;
+  static const double smallSpacing = 8.0;
   static const double standardPadding = 12.0;
 }

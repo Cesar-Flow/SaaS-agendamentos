@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class AgendamentoCardCompacto extends StatelessWidget {
+class AgendamentoCardCompact extends StatelessWidget {
   final String data;
   final String horario;
 
-  const AgendamentoCardCompacto({
+  const AgendamentoCardCompact({
     super.key,
     required this.data,
     required this.horario,
@@ -18,14 +18,7 @@ class AgendamentoCardCompacto extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Data: $data',
-              style: TextStyle(
-                fontSize: Theme.of(context).textTheme.titleMedium?.fontSize,
-                fontWeight: FontWeight.bold,
-                color: Theme.of(context).textTheme.titleMedium?.color,
-              ),
-            ),
+            Text('Data: $data', style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 4),
             Text(
               'Horário: $horario',
