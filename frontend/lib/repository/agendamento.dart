@@ -6,7 +6,7 @@ class Agendamento {
 
   Agendamento({required this.data, required this.horario});
 
-  AgendamentoCardCompacto renderizaCardCompacto() {
+  AgendamentoCardCompacto widgetCardCompacto() {
     return AgendamentoCardCompacto(data: data, horario: horario);
   }
 }

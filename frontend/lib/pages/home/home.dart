@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:frontend/repository/agendamento.dart';
+import 'package:frontend/components/card_slide.dart';
+
+import 'package:frontend/theme/theme_constants.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -17,11 +20,29 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      spacing: 10,
+    return ListView(
+      padding: EdgeInsets.all(ThemeConstants.standardSpacing),
       children: [
-        agendamento.renderizaCardCompacto(),
-        agendamento.renderizaCardCompacto(),
+        Text(
+          "Seus Agendamentos",
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
+        CardSlide(
+          cards: [
+            agendamento.widgetCardCompacto(),
+            agendamento.widgetCardCompacto(),
+            agendamento.widgetCardCompacto(),
+          ],
+          height: 120,
+        ),
+        Text(
+          "Estabelecimentos Favoritos",
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
+        Text(
+          "Agenda Frequentemente",
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
       ],
     );
   }
