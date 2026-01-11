@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'layout.dart';
-import 'pages/perfil/perfil.dart';
-import 'pages/notificacoes/notificacoes.dart';
+import 'package:frontend/layout.dart';
+import 'package:frontend/pages/perfil/perfil.dart';
+import 'package:frontend/pages/notificacoes/notificacoes.dart';
 
 void main() {
   runApp(const MyApp());

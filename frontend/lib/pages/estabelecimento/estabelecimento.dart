@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../components/bottom_nav.dart';
 
 class Estabelecimento extends StatefulWidget {
   const Estabelecimento({super.key});

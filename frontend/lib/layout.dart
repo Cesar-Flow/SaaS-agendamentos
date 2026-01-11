@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-import 'pages/agendamentos/agendamentos.dart';
-import 'pages/configuracao/configuracao.dart';
-import 'pages/home/home.dart';
-import 'pages/pesquisa/pesquisa.dart';
+import 'package:frontend/pages/agendamentos/agendamentos.dart';
+import 'package:frontend/pages/configuracao/configuracao.dart';
+import 'package:frontend/pages/home/home.dart';
+import 'package:frontend/pages/pesquisa/pesquisa.dart';
 
-import 'components/bottom_nav.dart';
-import 'components/top_bar.dart';
+import 'package:frontend/components/bottom_nav.dart';
+import 'package:frontend/components/top_bar.dart';
 
 class Layout extends StatefulWidget {
   /// Widget do layout base do app. Encapsula layout e navegação.
