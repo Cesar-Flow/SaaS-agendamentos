@@ -11,6 +11,9 @@ class Perfil extends StatefulWidget {
 class _PerfilState extends State<Perfil> {
   @override
   Widget build(BuildContext context) {
-    return Column(children: [Text("Perfil")]);
+    return Scaffold(
+      appBar: AppBar(title: const Text('Perfil')),
+      body: Center(child: Text('Página de Perfil')),
+    );
   }
 }

@@ -1,11 +1,3 @@
-/**
- * Layout.dart
- * Encapsula a lógica de navegação entre diferentes páginas do aplicativo.
- * 
- * Utiliza um Scaffold para estruturar a interface base com uma barra superior e 
- * uma barra de navegação inferior.
- */
-
 import 'package:flutter/material.dart';
 
 import 'pages/agendamentos/agendamentos.dart';
@@ -17,6 +9,7 @@ import 'components/bottom_nav.dart';
 import 'components/top_bar.dart';
 
 class Layout extends StatefulWidget {
+  /// Widget do layout base do app. Encapsula layout e navegação.
   const Layout({super.key});
 
   @override
@@ -26,18 +19,19 @@ class Layout extends StatefulWidget {
 class _LayoutState extends State<Layout> {
   int _currentIndex = 0;
 
+  /// Widgets das páginas da bottomNav do app.
   final List<Widget> _pages = [
     Home(),
+    Agendamentos(),
     Pesquisa(),
     Configuracao(),
-    Agendamentos(),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Layout')),
-      body: _pages[_currentIndex],
+      appBar: const TopBar(),
+      body: IndexedStack(index: _currentIndex, children: _pages),
       bottomNavigationBar: BottomNav(
         currentIndex: _currentIndex,
         changeIndex: (int index) {
