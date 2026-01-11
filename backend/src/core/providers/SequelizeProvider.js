@@ -25,6 +25,12 @@ class SequelizeProvider {
         }
     }
 
+    async transaction(callback) {
+        return this.sequelize.transaction(async (transaction) => {
+            return callback(transaction);
+        });
+    }
+
     get db() {
         return this.sequelize;
     }

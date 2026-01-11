@@ -4,12 +4,10 @@ const { SequelizeProvider } = require('@providers');
 const Appointment = require('./models/Appointment');
 const Comp_design_settings = require('./models/Comp_design_settings');
 const Company = require('./models/Company');
-const Customer = require('./models/Customer');
-const Platform_admin = require('./models/Platform_admin');
 const RefreshToken = require('./models/RefreshToken');
 const Service = require('./models/Service');
-const Staff = require('./models/Staff');
-const User = require('./models/Staff');
+const User = require('./models/User');
+const Role = require('./models/Role');
 
 
-module.exports = { SequelizeProvider, Appointment, Comp_design_settings, Company, Customer, Platform_admin, RefreshToken, Service, Staff, User };
+module.exports = { SequelizeProvider, Appointment, Comp_design_settings, Company, RefreshToken, Service, User, Role };

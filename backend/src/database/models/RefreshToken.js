@@ -8,7 +8,7 @@ const RefreshToken = SequelizeProvider.db.define('RefreshToken', {
     revoked: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
     reason: { type: DataTypes.STRING, allowNull: true },
     last_used_at: { type: DataTypes.DATE, allowNull: true },
-    user_id: { type: DataTypes.INTEGER, allowNull: false, references: { model: 'Customer', key: 'id' } },
+    user_id: { type: DataTypes.INTEGER, allowNull: false, references: { model: 'User', key: 'id' } },
 }, {
   timestamps: true, 
   tableName: 'RefreshToken'

@@ -22,16 +22,10 @@ dist/
 build/
 coverage/
 
-# Prisma cache
-.prisma/
-prisma/migrations/*
-
 # Docker
 docker-compose.override.yml
 docker-compose.yml
 Dockerfile
-/generated/prisma
 
-/generated/prisma
-
-/generated/prisma
+# Personal
+src/database/modelsBackup/

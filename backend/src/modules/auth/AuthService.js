@@ -1,5 +1,5 @@
 // Providers
-const { JwtProvider, BcryptProvider } = require('@providers');
+const { JwtProvider, BcryptProvider, SequelizeProvider } = require('@providers');
 
 // Exceptions
 const { AuthError } = require('@errors');
@@ -18,7 +18,7 @@ class AuthService {
     async registerCustomer(data) {
         const { password } = data;
 
-        return await sequelize.transaction(async (t) => {
+        return await SequelizeProvider.transaction(async (t) => {
             const user = await CustomerService.createCustomer({
                     ...data,
                     email: data.email.toLowerCase().trim(),
@@ -34,14 +34,14 @@ class AuthService {
             }, t);
 
             return { 
-                accessToken: AuthUtils.generateAccessToken(user),
+                accessToken: await AuthUtils.generateAccessToken(user),
                 refreshToken: refreshTokenPlain,
                 sessionId: refreshToken.id,
                 user: {
                     id: user.id,
                     name: user.name,
                     email: user.email,
-                    role: 'customer',
+                    role: user.role || 'customer',
                 }
             };
         });
@@ -62,7 +62,7 @@ class AuthService {
     async login(data) {
         const { email, password } = data;
 
-        return await sequelize.transaction(async (t) => {
+        return await SequelizeProvider.transaction(async (t) => {
             const user = await AuthUtils.findUserByEmail(email, CustomerService);
 
             if (!user) throw new AuthError('Email ou senha inválidos');
@@ -79,8 +79,10 @@ class AuthService {
                 hashToken
             }, t);
 
+            console.log(user);
+
             return { 
-                accessToken: AuthUtils.generateAccessToken(user),
+                accessToken: await AuthUtils.generateAccessToken(user),
                 refreshToken: refreshTokenPlain,
                 sessionId: refreshToken.id,
                 user: {

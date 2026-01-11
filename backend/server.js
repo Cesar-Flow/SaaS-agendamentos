@@ -10,7 +10,7 @@ const { SequelizeProvider } = require('@providers');
 const { errorHandler } = require('@middlewares');
 
 // Importando os modelos do banco
-const { Appointment, Comp_design_settings, Company, Customer, Platform_admin, RefreshToken, Service, Staff, User } = require('./src/database/index');
+const { Appointment, Comp_design_settings, Company, RefreshToken, Service, User, Role } = require('./src/database/index');
 
 app.use(express.json());
 app.use(express.urlencoded());
@@ -24,10 +24,11 @@ const customerRoutes = require('./src/modules/customer/customer.routes');
 async function runServer() {
     try {
         // Sincronizando banco de dados
-        //await sequelizeProvider.sync({ alter: true }); 
+        //await SequelizeProvider.sync({ alter: true }); 
 
         await Company.sync({ alter: true });
-        await Customer.sync({ alter: true });
+        await Role.sync({ alter: true });
+        await User.sync({ alter: true });
         await RefreshToken.sync({ alter: true });
         //await Service.sync({ alter: true });
         //await Appointment.sync({ alter: true });

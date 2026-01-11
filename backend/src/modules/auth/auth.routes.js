@@ -16,22 +16,30 @@ router.post('/registerCustomer',
     }),
     async (req, res) => {
         const response = await AuthService.registerCustomer(req.body);
-        return res.status(201).json({ success: true, token: response.token });
+
+        res.cookie('session',`${response.sessionId}.${response.refreshToken}`,{
+            httpOnly: true,
+            secure: false,
+            sameSite: 'lax',
+            path: '/'
+        });
+
+        return res.status(201).json({ success: true, accessToken: response.accessToken, user: response.user });
     }
 );
 
 // Rota de registro do Staff da empresa
-router.post('/registerStaff',
-    generalValidator({
-        email: { required: true },
-        name: { required: true },
-        password: { required: true }
-    }),
-    async (req, res) => {
-        const response = await AuthService.registerStaff(req.body);
-        return res.status(201).json({ success: true, token: response.token });
-    }
-);
+// router.post('/registerStaff',
+//     generalValidator({
+//         email: { required: true },
+//         name: { required: true },
+//         password: { required: true }
+//     }),
+//     async (req, res) => {
+//         const response = await AuthService.registerStaff(req.body);
+//         return res.status(201).json({ success: true, token: response.token });
+//     }
+// );
 
 // Rota de login
 router.post('/login', 
@@ -49,7 +57,7 @@ router.post('/login',
        path: '/'
     });
 
-    return res.status(200).json({ success: true, accessToken: response.accessToken });
+    return res.status(201).json({ success: true, accessToken: response.accessToken, user: response.user });
 });
 
 // Rota de refresh do access token
