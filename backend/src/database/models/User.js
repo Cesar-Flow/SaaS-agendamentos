@@ -9,7 +9,7 @@ const User = SequelizeProvider.db.define('User', {
     phone: { type: DataTypes.STRING, allowNull: true },
     notes: { type: DataTypes.TEXT, allowNull: true },
     situation: { type: DataTypes.INTEGER, allowNull: false,defaultValue: 1 },
-    role: { type: DataTypes.INTEGER, allowNull: false, references: { model: 'Role', key: 'id' } },
+    role_id: { type: DataTypes.INTEGER, allowNull: false, references: { model: 'Role', key: 'id' } },
 }, {
     timestamps: true,
     tableName: 'User',

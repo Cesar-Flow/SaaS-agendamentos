@@ -29,3 +29,5 @@ Dockerfile
 
 # Personal
 src/database/modelsBackup/
+src/modules/userOld
+src/modules/user/customer.routesOld.js

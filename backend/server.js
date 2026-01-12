@@ -17,7 +17,7 @@ app.use(express.urlencoded());
 app.use(cookieParser());
 
 const authRoutes = require('./src/modules/auth/auth.routes');
-const customerRoutes = require('./src/modules/customer/customer.routes'); 
+// const customerRoutes = require('./src/modules/customer/customer.routes'); 
 // const errorMiddleware = require('./src/core/errors/errorMiddleware');
 
 // Rodando servidor
@@ -38,7 +38,7 @@ async function runServer() {
         // Rotas
         //app.use(express.static(path.join(__dirname, 'html')));
         app.use('/auth', authRoutes);
-        app.use('/customers', customerRoutes); 
+        // app.use('/customers', customerRoutes); 
 
         app.use(errorHandler);
 
