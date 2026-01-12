@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 
 import 'package:frontend/layout.dart';
+
 import 'package:frontend/pages/perfil/perfil.dart';
 import 'package:frontend/pages/notificacoes/notificacoes.dart';
+import 'package:frontend/pages/estabelecimento/estabelecimento_page.dart';
+
 import 'package:frontend/theme/app_theme.dart';
 
 void main() {
@@ -25,6 +28,7 @@ class _MyAppState extends State<MyApp> {
       routes: {
         '/perfil': (context) => Perfil(),
         '/notificacoes': (context) => Notificacoes(),
+        '/estabelecimento': (context) => EstabelecimentoPage(),
       },
     );
   }

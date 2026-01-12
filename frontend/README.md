@@ -26,3 +26,4 @@ A arquitetura do app é construída usando como base o modelo MVVM descrito pelo
 ![Arquitetura App Flutter](docs/images/modelo%20arquitetura.png)
 
 > Toda pasta em pages tem dois arquivos: um com o widget e eventos (file.dart), e um com a lógica de manipulação dos eventos (file_model.dart).
+> Todo o estilo está encapsulado nos arquivos dentro da pasta "theme". app_theme.dart é o estilo dos widgets naturais do Flutter, theme_constants.dart são definições de estilo manuais.

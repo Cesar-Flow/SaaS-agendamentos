@@ -6,7 +6,15 @@ class Estabelecimento {
 
   Estabelecimento({required this.name, required this.type});
 
+  String getName() {
+    return name;
+  }
+
+  String getType() {
+    return type;
+  }
+
   EstabelecimentoCardLarge widgetCardLarge() {
-    return EstabelecimentoCardLarge(name: name, type: type);
+    return EstabelecimentoCardLarge(estabelecimento: this);
   }
 }

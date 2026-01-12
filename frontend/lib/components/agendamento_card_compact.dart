@@ -18,12 +18,9 @@ class AgendamentoCardCompact extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Data: $data', style: Theme.of(context).textTheme.titleMedium),
+            Text(data, style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 4),
-            Text(
-              'Horário: $horario',
-              style: Theme.of(context).textTheme.bodyLarge,
-            ),
+            Text(horario, style: Theme.of(context).textTheme.bodyLarge),
             const SizedBox(height: 4),
             Text(
               'Agendamento Compacto',

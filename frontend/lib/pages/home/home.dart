@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:frontend/repository/agendamento.dart';
-import 'package:frontend/components/card_slide.dart';
 import 'package:frontend/repository/estabelecimento.dart';
+
+import 'package:frontend/components/card_slide.dart';
 
 import 'package:frontend/theme/theme_constants.dart';
 
@@ -34,6 +35,12 @@ class _HomeState extends State<Home> {
       estabelecimento.widgetCardLarge(),
       estabelecimento.widgetCardLarge(),
       estabelecimento.widgetCardLarge(),
+      estabelecimento.widgetCardLarge(),
+      estabelecimento.widgetCardLarge(),
+      estabelecimento.widgetCardLarge(),
+      estabelecimento.widgetCardLarge(),
+      estabelecimento.widgetCardLarge(),
+      estabelecimento.widgetCardLarge(),
     ];
     return ListView(
       padding: EdgeInsets.all(ThemeConstants.standardSpacing),
@@ -53,7 +60,7 @@ class _HomeState extends State<Home> {
         ),
         Column(
           children: List.generate(
-            3,
+            estabelecimentosCards.length,
             (index) => Padding(
               padding: const EdgeInsets.only(
                 right: ThemeConstants.smallSpacing,

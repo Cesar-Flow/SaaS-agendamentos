@@ -19,7 +19,7 @@ class BottomNav extends StatelessWidget {
           icon: Icon(Icons.calendar_month),
           label: 'Agendamentos',
         ),
-        NavigationDestination(icon: Icon(Icons.search), label: 'Search'),
+        NavigationDestination(icon: Icon(Icons.search), label: 'Pesquisar'),
         NavigationDestination(
           icon: Icon(Icons.settings),
           label: 'Configurações',
