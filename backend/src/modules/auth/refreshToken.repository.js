@@ -1,4 +1,5 @@
 const { RefreshToken } = require('../../database/index');
+// const { Op, Sequelize } = require('sequelize');
 
 module.exports = {
     // Salva um novo refresh token no banco
@@ -14,11 +15,14 @@ module.exports = {
     // Busca uma sessão ativa pelo id
     getSessionById: async (sessionId, transaction = null) => {
         return await RefreshToken.findOne({
-            attributes: ['id', 'hash_token', 'user_id'],
+            attributes: ['id', 'hash_token', 'user_id', 'expires_at'],
             where: {
             id: sessionId,
             expired: false,
-            revoked: false
+            revoked: false,
+            // expires_at: {
+            //     [Op.gt]: Sequelize.fn('NOW')
+            // }
             },
             raw: true,
             transaction
@@ -37,5 +41,20 @@ module.exports = {
         );
 
         return affectedRows > 0;
-    }
+    },
+
+    // Define a sessão como expirada
+    setExpiredSession: async (sessionId, transaction = null) => {
+        const [affectedRows] = await RefreshToken.update({
+            expired: true
+        }, {
+            where: { 
+                id: sessionId,
+                expired: false,
+                revoked: false
+            }, transaction
+        });
+
+        return affectedRows > 0;
+    } 
 };

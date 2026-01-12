@@ -1,4 +1,8 @@
+// Providers
 const { BcryptProvider, JwtProvider } = require('@providers');
+
+// Errors
+const { AuthError } = require('@errors');
 
 class AuthUtils {
     // Verifica se um email já pertence a um usuário
@@ -28,6 +32,15 @@ class AuthUtils {
         const session = await refreshTokenRepository.getSessionById(sessionId);
 
         if (!session) throw new AuthError('Sessão inválida');
+
+        const isExpired = new Date(session.expires_at) <= new Date();
+
+        console.log("id da sessão: ", session.id);
+
+        if (isExpired) {
+            await refreshTokenRepository.setExpiredSession(session.id); 
+            throw new AuthError('Sessão expirada'); 
+        }
 
         const isValid = await BcryptProvider.compare(refreshToken, session.hash_token);
 

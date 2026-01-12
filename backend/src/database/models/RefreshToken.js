@@ -1,9 +1,10 @@
-const { DataTypes } = require('sequelize');
+const { DataTypes, Sequelize } = require('sequelize');
 const { SequelizeProvider } = require('@providers');
 
 const RefreshToken = SequelizeProvider.db.define('RefreshToken', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     hash_token: { type: DataTypes.STRING, allowNull: false },
+    expires_at: { type: DataTypes.DATE, allowNull: false, defaultValue: Sequelize.literal("NOW() + INTERVAL '3 days'")},
     expired: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
     revoked: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
     reason: { type: DataTypes.STRING, allowNull: true },
