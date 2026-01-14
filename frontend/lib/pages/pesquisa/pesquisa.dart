@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/repository/estabelecimento.dart';
 
 import 'package:frontend/components/search_input.dart';
+import 'package:frontend/components/filter_select.dart';
 
 import 'package:frontend/theme/theme_constants.dart';
 
@@ -18,6 +19,7 @@ class _PesquisaState extends State<Pesquisa> {
     name: "Cabeleireiro XYZ",
     type: "Cabeleireiro",
   );
+  String _type = 'option1';
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +45,13 @@ class _PesquisaState extends State<Pesquisa> {
       padding: EdgeInsets.all(ThemeConstants.standardSpacing),
       children: [
         SearchInput(),
-        SizedBox(height: ThemeConstants.standardSpacing),
+        FilterSelect(
+          selectedValue: _type,
+          onSelectedChanged: (String value) {
+            _type = value;
+          },
+        ),
+
         Column(
           children: List.generate(
             estabelecimentosCards.length,
