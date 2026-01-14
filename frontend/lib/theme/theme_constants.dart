@@ -8,6 +8,7 @@ class ThemeConstants {
   static const Color appBackground = Color(0xFFF3F3F3);
   static const Color cardBackground = Color(0xFFF3F3F3);
   static const Color selectedCardBackground = borderColor;
+  static const Color bottomNavBarBackground = Color(0xFF323232);
 
   static const Color bodyText = Color(0xFF121212);
   static const Color titleText = Color(0xFF121212);
@@ -58,6 +59,16 @@ class ThemeConstants {
   static const TextStyle labelStandard = TextStyle(
     color: labelText,
     fontWeight: FontWeight.normal,
+    fontSize: 12,
+  );
+  static const TextStyle labelLarge = TextStyle(
+    color: labelText,
+    fontWeight: FontWeight.normal,
+    fontSize: 12,
+  );
+  static const TextStyle bottomNavBarLabel = TextStyle(
+    color: selectedContrastText,
+    fontWeight: FontWeight.w500,
     fontSize: 12,
   );
 

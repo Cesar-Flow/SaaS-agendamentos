@@ -38,6 +38,7 @@ class AppTheme extends ThemeConstants {
         bodySmall: ThemeConstants.bodySmall,
         titleLarge: ThemeConstants.titleLarge,
         titleMedium: ThemeConstants.titleMedium,
+        labelLarge: ThemeConstants.labelLarge,
         labelSmall: ThemeConstants.labelStandard,
       ),
     );

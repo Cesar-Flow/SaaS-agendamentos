@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:frontend/theme/theme_constants.dart';
+
 class BottomNav extends StatelessWidget {
   const BottomNav({
     super.key,
@@ -13,15 +15,25 @@ class BottomNav extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return NavigationBar(
+      backgroundColor: ThemeConstants.bottomNavBarBackground,
+      labelTextStyle: WidgetStateProperty.all(ThemeConstants.bottomNavBarLabel),
+      indicatorColor: ThemeConstants.primaryColor,
       destinations: [
-        NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
         NavigationDestination(
-          icon: Icon(Icons.calendar_month),
+          icon: Icon(Icons.home, color: Colors.white),
+          label: 'SaaS',
+        ),
+
+        NavigationDestination(
+          icon: Icon(Icons.calendar_month, color: Colors.white),
           label: 'Agendamentos',
         ),
-        NavigationDestination(icon: Icon(Icons.search), label: 'Pesquisar'),
         NavigationDestination(
-          icon: Icon(Icons.settings),
+          icon: Icon(Icons.search, color: Colors.white),
+          label: 'Pesquisar',
+        ),
+        NavigationDestination(
+          icon: Icon(Icons.settings, color: Colors.white),
           label: 'Configurações',
         ),
       ],
