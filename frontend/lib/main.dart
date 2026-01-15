@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 import 'package:frontend/layout.dart';
 
@@ -9,7 +10,7 @@ import 'package:frontend/pages/estabelecimento/estabelecimento_page.dart';
 import 'package:frontend/theme/app_theme.dart';
 
 void main() {
-  runApp(const MyApp());
+  initializeDateFormatting().then((_) => runApp(const MyApp()));
 }
 
 class MyApp extends StatefulWidget {
