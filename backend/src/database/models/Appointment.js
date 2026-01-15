@@ -8,11 +8,12 @@ const Appointment = SequelizeProvider.db.define('Appointment', {
     end_time: { type: DataTypes.TIME, allowNull: false },
     status: { type: DataTypes.STRING, allowNull: false, defaultValue: 'scheduled' },
     notes: { type: DataTypes.TEXT, allowNull: true },
-    customer_id: { type: DataTypes.INTEGER, allowNull: false, references: { model: 'Customer', key: 'id' } },
+    // customer_id: { type: DataTypes.INTEGER, allowNull: false, references: { model: 'Customer', key: 'id' } },
     service_id: { type: DataTypes.INTEGER, allowNull: false, references: { model: 'Service', key: 'id' } },
     company_id: { type: DataTypes.INTEGER, allowNull: false, references: { model: 'Company', key: 'id' } },
 }, {
   timestamps: true,
+  tableName: 'Appointment',
 });
 
 module.exports = Appointment;

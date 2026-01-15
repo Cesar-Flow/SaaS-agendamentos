@@ -37,7 +37,7 @@ module.exports = (schema) => {
 
         if (field === 'email') {
           const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-          if (!emailRegex.test(value)) {
+          if (!emailRegex.test(value.trim())) {
             throw new ValidationError('Email inválido');
           }
         }
