@@ -4,9 +4,6 @@ const userRepository = require('./user.repository');
 // Exceptions
 const { ValidationError } = require('@errors');
 
-// Providers
-// const { BcryptProvider } = require('@providers');
-
 class UserService {
     // Cria um novo usuario
     async createUser(data, transaction = null) {

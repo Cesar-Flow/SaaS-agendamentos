@@ -1,5 +1,5 @@
 // Providers
-const { JwtProvider, BcryptProvider, SequelizeProvider } = require('@providers');
+const { BcryptProvider, SequelizeProvider } = require('@providers');
 
 // Exceptions
 const { AuthError } = require('@errors');
@@ -55,23 +55,12 @@ class AuthService {
         });
     }
 
-    // Registra o novo staff e faz o login automático caso funcione
-    // async registerStaff(data) {
-    //     const { password } = data;
-    //     let user = await StaffService.createStaff(data);
-
-    //     return await this.login({
-    //         email: user.email,
-    //         password: password
-    //     });
-    // }
-
     // Tenta fazer o login do usuário
     async login(data) {
         const { email, password } = data;
 
         return await SequelizeProvider.transaction(async (t) => {
-            const user = await UserService.getUserByEmail(email, t);
+            const user = await UserService.getUserByEmail(email.toLowerCase().trim(), t);
 
             if (!user) throw new AuthError('Email ou senha inválidos');
             if (user.situation !== 1) throw new AuthError('Usuário não está ativo');
@@ -107,6 +96,7 @@ class AuthService {
         });
     }
 
+    // Encerra sessão
     async logout(data) {
         const parts = data.split('.');
         if (parts.length !== 2) throw new AuthError('Sessão inválida');
@@ -122,6 +112,7 @@ class AuthService {
         });
     }
 
+    // Parte do login automatico
     async me(data) {
         const parts = data.split('.');
         if (parts.length !== 2) throw new AuthError('Sessão inválida');
@@ -135,17 +126,10 @@ class AuthService {
 
         if (!user) throw new AuthError('Sessão inválida');
 
-        const payload = {
-            sub: user.id,
-            email: user.email,
-            role: user.role_id,
-            active: user.situation === 1 ? true : false
-        };
-
         const role = await roleRepository.getRoleById(user.role_id);
 
         return {
-            accessToken: await JwtProvider.sign(payload),
+            accessToken: await AuthUtils.generateAccessToken(user),
             user: {
                 id: user.id,
                 name: user.name,
@@ -159,14 +143,37 @@ class AuthService {
         };
     }
 
-    // Verifica no banco se a sessão existe
-    // Verifica no banco se a sessão ainda é valida
-    // Verifica no banco se a sessão pertence ao usuário buscado
+    // Gera um novo access token
+    async refresh(data) {
+        const parts = data.split('.');
+        if (parts.length !== 2) throw new AuthError('Sessão inválida');
 
-    // Caso verdadeiro: Gera um novo access token e retorna
-    // async refresh() {
+        const [sessionId, refreshToken] = parts;
 
-    // }
+        await AuthUtils.isSessionValid(sessionId, refreshToken, refreshTokenRepository);
+
+        const session = await refreshTokenRepository.getSessionById(sessionId);
+        const user = await UserService.getUserById(session.user_id);
+
+        if (!user) throw new AuthError('Sessão inválida');
+
+        const role = await roleRepository.getRoleById(user.role_id);
+
+        return {
+            accessToken: await AuthUtils.generateAccessToken(user),
+            user: {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                role: {
+                    id: role.id,
+                    name: role.name,
+                    description: role.description
+                }
+            }
+        }
+    }
+
 }
 
 module.exports = new AuthService();

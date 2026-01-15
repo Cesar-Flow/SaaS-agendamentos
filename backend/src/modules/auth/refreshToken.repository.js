@@ -1,5 +1,4 @@
 const { RefreshToken } = require('../../database/index');
-// const { Op, Sequelize } = require('sequelize');
 
 module.exports = {
     // Salva um novo refresh token no banco
@@ -20,9 +19,6 @@ module.exports = {
             id: sessionId,
             expired: false,
             revoked: false,
-            // expires_at: {
-            //     [Op.gt]: Sequelize.fn('NOW')
-            // }
             },
             raw: true,
             transaction

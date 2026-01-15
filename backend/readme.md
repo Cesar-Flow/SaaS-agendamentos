@@ -2,19 +2,42 @@
 
 O projeto utiliza **Node.js**, **Express**, **Sequelize** e **PostgreSQL**, com suporte completo a execução local e via **Docker**.
 
+## Documentação da API (Swagger)
+
+A API é totalmente documentada utilizando swagger-jsdoc e swagger-ui-express.
+
+Após subir a aplicação, acesse:
+```
+http://localhost:3000/api-docs/
+```
+
+A documentação inclui:
+
+Rotas de autenticação (/register, /login, /me, /refresh, /logout)
+
+Schemas
+
+Examples (casos de uso reais)
+
+Security Schemes (JWT Bearer e Cookie-based session)
 ---
 
 ## Tecnologias utilizadas
 
-- **Node.js 24**
-- **Express 5.2.1**
-- **Sequelize 6.37.7**
-- **PostgreSQL 15**
-- JWT (jsonwebtoken 9.0.2)
-- Bcrypt 6.0.0
-- Nodemon 3.1.11
-- Docker & Docker Compose
-
+**Node.js 24**
+**Express 5.2.1**
+**Sequelize 6.37.7**
+**PostgreSQL 15**
+**JWT (jsonwebtoken 9.0.2)**
+**Bcrypt 6.0.0**
+**Swagger**
+**swagger-jsdoc 6.2.8**
+**swagger-ui-express 5.0.1**
+**Docker & Docker Compose**
+**Nodemon 3.1.11**
+**dotenv**
+**cookie-parser**
+**module-alias**
 ---
 
 ## Estrutura do projeto

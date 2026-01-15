@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const AuthService = require('./AuthService');
+const AuthService = require('../modules/auth/AuthService');
 
 // Middlewares
 const { ensureAuthenticated, generalValidator, ensureSession } = require('@middlewares');
@@ -28,19 +28,6 @@ router.post('/registerCustomer',
     }
 );
 
-// Rota de registro do Staff da empresa
-// router.post('/registerStaff',
-//     generalValidator({
-//         email: { required: true },
-//         name: { required: true },
-//         password: { required: true }
-//     }),
-//     async (req, res) => {
-//         const response = await AuthService.registerStaff(req.body);
-//         return res.status(201).json({ success: true, token: response.token });
-//     }
-// );
-
 // Rota de login
 router.post('/login', 
     generalValidator({
@@ -61,9 +48,11 @@ router.post('/login',
 });
 
 // Rota de refresh do access token
-// Após expirar um access token, o front envia a requisição e um novo token é gerado e retornado
+// Usada quando o access token expira
 router.post('/refresh', ensureSession, async (req, res) => {
-    // logica
+    const response = await AuthService.refresh(req.cookies.session);
+
+    return res.status(200).json({ success: true, accessToken: response.accessToken });
 });
 
 // Rota de logout
