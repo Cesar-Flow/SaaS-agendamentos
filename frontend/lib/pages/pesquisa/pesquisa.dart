@@ -19,7 +19,8 @@ class _PesquisaState extends State<Pesquisa> {
     name: "Cabeleireiro XYZ",
     type: "Cabeleireiro",
   );
-  String _type = 'option1';
+  static const _typeValues = ['option1', 'option2', 'option3'];
+  int _typeIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -45,20 +46,43 @@ class _PesquisaState extends State<Pesquisa> {
       padding: EdgeInsets.all(ThemeConstants.standardSpacing),
       children: [
         SearchInput(),
-        FilterSelect(
-          selectedValue: _type,
-          onSelectedChanged: (String value) {
-            _type = value;
-          },
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            FilterSelect(
+              values: _typeValues,
+              selectedIndex: _typeIndex,
+              onSelectedChanged: (int index) {
+                setState(() {
+                  _typeIndex = index;
+                });
+              },
+            ),
+            FilterSelect(
+              values: _typeValues,
+              selectedIndex: _typeIndex,
+              onSelectedChanged: (int index) {
+                setState(() {
+                  _typeIndex = index;
+                });
+              },
+            ),
+            FilterSelect(
+              values: _typeValues,
+              selectedIndex: _typeIndex,
+              onSelectedChanged: (int index) {
+                setState(() {
+                  _typeIndex = index;
+                });
+              },
+            ),
+          ],
         ),
-
+        SizedBox(height: 8.0),
         Column(
           children: List.generate(
             estabelecimentosCards.length,
-            (index) => Padding(
-              padding: const EdgeInsets.only(top: 4.0, right: 4.0, left: 4.0),
-              child: estabelecimentosCards[index],
-            ),
+            (index) => estabelecimentosCards[index],
           ),
         ),
       ],
