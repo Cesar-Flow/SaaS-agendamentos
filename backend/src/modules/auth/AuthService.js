@@ -1,162 +1,179 @@
 // Providers
-const { JwtProvider, BcryptProvider } = require('@providers');
+const { BcryptProvider, SequelizeProvider } = require('@providers');
 
 // Exceptions
 const { AuthError } = require('@errors');
 
 // Services
-const CustomerService = require('../customer/CustomerService');
+const UserService = require('../user/UserService');
 
 // Repository
-const authRepository = require('./auth.repository');
+const refreshTokenRepository = require('./refreshToken.repository');
+const roleRepository = require('./role.repository');
+
+// Utils
+const { AuthUtils } = require('@utils');
 
 class AuthService {
     // Registra o novo cliente e faz o login automático caso funcione
     async registerCustomer(data) {
         const { password } = data;
-        let user = await CustomerService.createCustomer({
-            ...data,
-            email: data.email.toLowerCase().trim(),
-            password: await BcryptProvider.hash(password)
-        });
 
-        return await this.login({
-            email: user.email,
-            password: password
+        return await SequelizeProvider.transaction(async (t) => {
+            const user = await UserService.createUser({
+                    ...data,
+                    email: data.email.toLowerCase().trim(),
+                    password: await BcryptProvider.hash(password),
+                    roleId: 1
+            }, t);
+
+            const refreshTokenPlain = crypto.randomUUID();
+            const hashToken = await BcryptProvider.hash(refreshTokenPlain);
+
+            const refreshToken = await refreshTokenRepository.saveHashToken({
+                userId: user.id,
+                hashToken
+            }, t);
+
+            const role = await roleRepository.getRoleById(1, t);
+
+            return { 
+                accessToken: await AuthUtils.generateAccessToken(user),
+                refreshToken: refreshTokenPlain,
+                sessionId: refreshToken.id,
+                user: {
+                    id: user.id,
+                    name: user.name,
+                    email: user.email,
+                    role: {
+                        id: role.id,
+                        name: role.name,
+                        description: role.description
+                    }
+                }
+            };
         });
     }
-
-    // Registra o novo staff e faz o login automático caso funcione
-    // async registerStaff(data) {
-    //     const { password } = data;
-    //     let user = await StaffService.createStaff(data);
-
-    //     return await this.login({
-    //         email: user.email,
-    //         password: password
-    //     });
-    // }
 
     // Tenta fazer o login do usuário
     async login(data) {
         const { email, password } = data;
-        let user = await this.findUserByEmail(email);
 
-        if (!user) throw new AuthError('Email ou senha inválidos');
+        return await SequelizeProvider.transaction(async (t) => {
+            const user = await UserService.getUserByEmail(email.toLowerCase().trim(), t);
 
-        if (!user.active) throw new AuthError('Usuário não está ativo');
+            if (!user) throw new AuthError('Email ou senha inválidos');
+            if (user.situation !== 1) throw new AuthError('Usuário não está ativo');
 
-        const isValid = await BcryptProvider.compare(password, user.password);
+            const isValid = await BcryptProvider.compare(password, user.password);
+            if (!isValid) throw new AuthError('Email ou senha inválidos');
 
-        if (!isValid) throw new AuthError('Email ou senha inválidos');
+            const refreshTokenPlain = crypto.randomUUID();
+            const hashToken = await BcryptProvider.hash(refreshTokenPlain);
 
-        const payload = {
-            sub: user.id,
-            email: user.email,
-            role: user.role,
-            active: user.active
-        };
+            const refreshToken = await refreshTokenRepository.saveHashToken({
+                userId: user.id,
+                hashToken
+            }, t);
 
-        const accessToken = JwtProvider.sign(payload);
+            const role = await roleRepository.getRoleById(user.role_id);
 
-        const refreshToken = crypto.randomUUID();
-        const hashRefreshToken = await BcryptProvider.hash(refreshToken);
-
-        const tokenEntity = await this.saveHashToken({
-            hashToken: hashRefreshToken,
-            userId: user.id
+            return { 
+                accessToken: await AuthUtils.generateAccessToken(user),
+                refreshToken: refreshTokenPlain,
+                sessionId: refreshToken.id,
+                user: {
+                    id: user.id,
+                    name: user.name,
+                    email: user.email,
+                    role: {
+                        id: role.id,
+                        name: role.name,
+                        description: role.description
+                    }
+                }
+            };
         });
-
-        return { 
-            accessToken, refreshToken, sessionId: tokenEntity.id,
-            user: {
-                id: user.id,
-                name: user.name,
-                email: user.email,
-                role: 'customer',
-            }
-        };
     }
 
-    // Salva RefreshToken no banco
-    async saveHashToken(data) {
-        const tokenEntity = await authRepository.saveHashToken(data);
+    // Encerra sessão
+    async logout(data) {
+        const parts = data.split('.');
+        if (parts.length !== 2) throw new AuthError('Sessão inválida');
 
-        return tokenEntity;
+        const [sessionId, refreshToken] = parts;
+
+        await AuthUtils.isSessionValid(sessionId, refreshToken, refreshTokenRepository);
+
+        return await refreshTokenRepository.revokeSession({
+            revoked: true,
+            reason: 'logout pelo usuário',
+            sessionId
+        });
     }
 
-    // Verifica se um usuário tem sessão ativa
-    async getActiveSession(data) {
-        const response = await authRepository.getSessionById(data);
-
-        return response;
-    }
-
+    // Parte do login automatico
     async me(data) {
         const parts = data.split('.');
         if (parts.length !== 2) throw new AuthError('Sessão inválida');
 
         const [sessionId, refreshToken] = parts;
 
-        if (!sessionId || !refreshToken) throw new AuthError('Sessão inválida');
+        await AuthUtils.isSessionValid(sessionId, refreshToken, refreshTokenRepository);
 
-        const session = await authRepository.getSessionById(sessionId);
-
-        if (!session) throw new AuthError('Sessão inválida');
-
-        const isValid = await BcryptProvider.compare(refreshToken, session.hash_token);
-
-        if (!isValid) throw new AuthError('Sessão inválida');
-
-        const user = await CustomerService.getCustomerById(session.user_id);
+        const session = await refreshTokenRepository.getSessionById(sessionId);
+        const user = await UserService.getUserById(session.user_id);
 
         if (!user) throw new AuthError('Sessão inválida');
 
-        const payload = {
-            sub: user.id,
-            email: user.email,
-            role: user.role,
-            active: user.active
-        };
+        const role = await roleRepository.getRoleById(user.role_id);
 
         return {
-            accessToken: await JwtProvider.sign(payload),
+            accessToken: await AuthUtils.generateAccessToken(user),
             user: {
                 id: user.id,
                 name: user.name,
                 email: user.email,
-                role: 'customer',
+                role: {
+                    id: role.id,
+                    name: role.name,
+                    description: role.description
+                }
             }
         };
     }
 
-    // Verifica se um email já pertence a um usuário
-    async findUserByEmail(email) {
-        const customer = await CustomerService.getCustomerByEmail(email);
-        if (customer) {
-            return {
-                id: customer.id,
-                email: customer.email,
-                password: customer.password,
-                active: customer.situation,
-                role: 'customer',
-            };
+    // Gera um novo access token
+    async refresh(data) {
+        const parts = data.split('.');
+        if (parts.length !== 2) throw new AuthError('Sessão inválida');
+
+        const [sessionId, refreshToken] = parts;
+
+        await AuthUtils.isSessionValid(sessionId, refreshToken, refreshTokenRepository);
+
+        const session = await refreshTokenRepository.getSessionById(sessionId);
+        const user = await UserService.getUserById(session.user_id);
+
+        if (!user) throw new AuthError('Sessão inválida');
+
+        const role = await roleRepository.getRoleById(user.role_id);
+
+        return {
+            accessToken: await AuthUtils.generateAccessToken(user),
+            user: {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                role: {
+                    id: role.id,
+                    name: role.name,
+                    description: role.description
+                }
+            }
         }
-
-        // fazer o mesmo para os proximos niveis de usuários
-        // fluxo: customer -> staff -> dev
-        
-        return null;
     }
 
-    // Verifica no banco se a sessão existe
-    // Verifica no banco se a sessão ainda é valida
-    // Verifica no banco se a sessão pertence ao usuário buscado
-
-    // Caso verdadeiro: Gera um novo access token e retorna
-    async refresh() {
-
-    }
 }
 
 module.exports = new AuthService();
