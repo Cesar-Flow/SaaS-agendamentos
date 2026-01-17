@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 
-class AgendamentoCardCompact extends StatelessWidget {
-  final String data;
-  final String horario;
+import 'package:frontend/repository/agendamento.dart';
 
-  const AgendamentoCardCompact({
-    super.key,
-    required this.data,
-    required this.horario,
-  });
+class AgendamentoCardCompact extends StatelessWidget {
+  final Agendamento agendamento;
+
+  const AgendamentoCardCompact({super.key, required this.agendamento});
 
   @override
   Widget build(BuildContext context) {
@@ -18,9 +15,15 @@ class AgendamentoCardCompact extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(data, style: Theme.of(context).textTheme.titleMedium),
+            Text(
+              agendamento.data,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
             const SizedBox(height: 4),
-            Text(horario, style: Theme.of(context).textTheme.bodyLarge),
+            Text(
+              agendamento.horario,
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
             const SizedBox(height: 4),
             Text(
               'Agendamento Compacto',

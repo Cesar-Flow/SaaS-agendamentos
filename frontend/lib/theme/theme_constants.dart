@@ -3,12 +3,15 @@ import 'package:flutter/material.dart';
 class ThemeConstants {
   // Colors
   static const Color primaryColor = Color(0xFF7939F9);
+  static const Color primaryColorLight = Color(0xFFDCC6FF);
+  static const Color secondaryColor = Color(0xFF323232);
+  static const Color secondaryColorLight = Color(0xFF484848);
   static const Color borderColor = Color(0xFF232323);
 
   static const Color appBackground = Color(0xFFF3F3F3);
   static const Color cardBackground = Color(0xFFF3F3F3);
   static const Color selectedCardBackground = borderColor;
-  static const Color bottomNavBarBackground = Color(0xFF323232);
+  static const Color bottomNavBarBackground = secondaryColor;
 
   static const Color bodyText = Color(0xFF121212);
   static const Color titleText = Color(0xFF121212);

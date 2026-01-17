@@ -15,7 +15,7 @@ class Notificacoes extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _notificacaoWidgetList = [
+    final notificacaoWidgetList = [
       notificacao.widgetCard(),
       notificacao.widgetCard(),
       notificacao.widgetCard(),
@@ -41,10 +41,10 @@ class Notificacoes extends StatelessWidget {
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: List.generate(
-              _notificacaoWidgetList.length,
+              notificacaoWidgetList.length,
               (index) => Padding(
                 padding: EdgeInsets.all(0.0),
-                child: _notificacaoWidgetList[index],
+                child: notificacaoWidgetList[index],
               ),
             ),
           ),
