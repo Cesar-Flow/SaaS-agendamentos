@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:frontend/repository/agendamento.dart';
+import 'package:frontend/components/modals/desagendamento_modal.dart';
+
 import 'package:frontend/theme/theme_constants.dart';
 
 class AgendamentoCardLarge extends StatelessWidget {
@@ -36,7 +38,24 @@ class AgendamentoCardLarge extends StatelessWidget {
               'Agendamento Compacto',
               style: Theme.of(context).textTheme.bodyLarge,
             ),
-            Icon(Icons.delete, color: ThemeConstants.semanticWrong),
+            IconButton(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return DesagendamentoModal(
+                      itemName: agendamento.estabelecimento,
+                      day: agendamento.data,
+                      time: agendamento.horario,
+                      confirmCallback: () {
+                        debugPrint("Desagendamento feito");
+                      },
+                    );
+                  },
+                );
+              },
+              icon:Icon(Icons.delete, color: ThemeConstants.semanticWrong),
+            ),
           ],
         ),
       ),
