@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
 import 'package:frontend/layout.dart';
+import 'package:frontend/pages/login/login.dart';
 
 import 'package:frontend/pages/perfil/perfil.dart';
 import 'package:frontend/pages/notificacoes/notificacoes.dart';
@@ -24,7 +25,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Layout(),
+      home: Login(),
       theme: AppTheme.lightTheme(),
       routes: {
         '/perfil': (context) => Perfil(),
