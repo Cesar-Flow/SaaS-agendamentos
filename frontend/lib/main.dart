@@ -3,6 +3,7 @@ import 'package:intl/date_symbol_data_local.dart';
 
 import 'package:frontend/layout.dart';
 import 'package:frontend/pages/login/login.dart';
+import 'package:frontend/pages/register/register.dart';
 
 import 'package:frontend/pages/perfil/perfil.dart';
 import 'package:frontend/pages/notificacoes/notificacoes.dart';
@@ -31,6 +32,8 @@ class _MyAppState extends State<MyApp> {
         '/perfil': (context) => Perfil(),
         '/notificacoes': (context) => Notificacoes(),
         '/estabelecimento': (context) => EstabelecimentoPage(),
+        '/login': (context) => const Login(),
+        '/register': (context) => Register(),
       },
     );
   }

@@ -4,53 +4,57 @@ import 'package:frontend/services/auth.dart';
 
 class Register extends StatelessWidget {
   Register({super.key});
-  final Api api = Api();
+  final Auth auth = Auth();
 
-  Future <void> registerUser() async {
-    String status = await api.registerCustomer();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  Future<void> registerUser() async {
+    String status = await auth.registerCustomer(
+      _nameController.text,
+      _emailController.text,
+      _passwordController.text,
+      _phoneController.text,
+      "No notes",
+    );
     debugPrint('Registration status: $status');
-  }
-
-  Future<void> getUser() async {
-    String userData = await api.getUser();
-    debugPrint('User data: $userData');
-  }
-
-  Future<void> login() async {
-    String loginStatus = await api.login();
-    debugPrint('Login status: $loginStatus');
-  }
-
-  Future<void> logout() async {
-    String logoutStatus = await api.logout();
-    debugPrint('Logout status: $logoutStatus');
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Register'),
+      appBar: AppBar(title: const Text('Register')),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            TextField(
+              controller: _nameController,
+              decoration: const InputDecoration(labelText: 'Nome'),
+            ),
+            TextField(
+              controller: _emailController,
+              decoration: const InputDecoration(labelText: 'Email'),
+            ),
+            TextField(
+              controller: _phoneController,
+              decoration: const InputDecoration(labelText: 'Telefone'),
+            ),
+            TextField(
+              controller: _passwordController,
+              decoration: const InputDecoration(labelText: 'Senha'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                await registerUser();
+              },
+              child: const Text('Resgistrar Cliente'),
+            ),
+          ],
+        ),
       ),
-      body: Column(
-        children: [
-          ElevatedButton(
-            onPressed: () async {
-              await registerUser();
-            },
-            child: const Text('Resgistrar Cliente'),
-          ),
-          ElevatedButton(onPressed: () async {
-              await getUser();
-            }, child: const Text('Dados de usuário')),
-          ElevatedButton(onPressed: () async {
-              await login();
-            }, child: const Text('Login Cliente')),
-          ElevatedButton(onPressed: () async {
-              await logout();
-            }, child: const Text('Logout Cliente')),
-        ],
-      )
     );
   }
 }
