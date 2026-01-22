@@ -32,7 +32,7 @@ class _MyAppState extends State<MyApp> {
         '/perfil': (context) => Perfil(),
         '/notificacoes': (context) => Notificacoes(),
         '/estabelecimento': (context) => EstabelecimentoPage(),
-        '/login': (context) => const Login(),
+        '/login': (context) => Login(),
         '/register': (context) => Register(),
       },
     );

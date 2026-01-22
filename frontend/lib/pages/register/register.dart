@@ -13,8 +13,8 @@ class Register extends StatelessWidget {
 
   Future<void> registerUser() async {
     String status = await auth.registerCustomer(
-      _nameController.text,
       _emailController.text,
+      _nameController.text,
       _passwordController.text,
       _phoneController.text,
       "No notes",

@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class Auth {
   final Dio _dio = Dio();
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
 
-  Auth() {
+  Auth();
+
+  void initialize() async {
     _dioInterceptors(_dio);
   }
 
@@ -29,37 +33,44 @@ class Auth {
           "notes": notes,
         },
       );
+
       debugPrint('Register response: ${response.data}, ${response.statusCode}');
-      return response.statusCode.toString();
-    } catch (e) {
-      debugPrint('Register error: ${e.toString()}');
-      return "400";
+      setAuthToken(response.data['accessToken']);
+      return "Registro bem sucedido";
+    } on DioException catch (e) {
+      debugPrint(e.response.toString());
+      return e.response?.data["message"] ?? "Erro ao fazer registro";
     }
   }
 
   Future<String> login(String email, String password) async {
     try {
+      // debugPrint((await getAuthToken()).toString());
       debugPrint("Trying to login...");
       final response = await _dio.post(
         '/auth/login',
         data: {"email": email, "password": password},
       );
-      debugPrint('Login response: ${response.data}');
-      return response.statusCode.toString();
-    } catch (e) {
-      debugPrint(e.toString());
-      return "400";
+
+      debugPrint('Login response: ${response.data}, ${response.statusCode}');
+      setAuthToken(response.data['accessToken']);
+      return "Login bem sucedido";
+    } on DioException catch (e) {
+      debugPrint(e.response.toString());
+      return e.response?.data["message"] ?? "Erro ao fazer login";
     }
   }
 
   Future<String> logout() async {
     try {
       debugPrint("Trying to logout...");
-      final response = await _dio.post('/auth/logout');
-      return response.statusCode.toString();
-    } catch (e) {
-      debugPrint(e.toString());
-      return "400";
+      await _dio.post('/auth/logout');
+
+      setAuthToken("");
+      return "Logout bem sucedido";
+    } on DioException catch (e) {
+      debugPrint(e.response.toString());
+      return e.response?.data["message"] ?? "Erro ao fazer logout";
     }
   }
 
@@ -67,6 +78,7 @@ class Auth {
     try {
       debugPrint("Trying to get user...");
       final response = await _dio.get('/auth/getUser');
+
       debugPrint('User response: ${response.data}');
       return response.data.toString();
     } catch (e) {
@@ -75,21 +87,22 @@ class Auth {
     }
   }
 
-  void _dioInterceptors(Dio dio) {
+  void _dioInterceptors(Dio dio) async {
     dio.interceptors.add(
       InterceptorsWrapper(
-        onRequest: (options, handler) {
+        onRequest: (options, handler) async {
           options.baseUrl = "http://10.0.2.2:3000";
           options.headers['Content-Type'] = 'application/json';
           options.headers['Accept'] = 'application/json';
+          options.receiveDataWhenStatusError = true;
           options.validateStatus = (status) {
-            return status! >= 200 && status < 500;
+            return status! >= 200 && status < 300;
           };
 
-          // final token = getAuthToken();
-          // if (token.isNotEmpty) {
-          //   options.headers['Authorization'] = 'Bearer $token';
-          // }
+          final accessToken = await getAuthToken();
+          if (accessToken != null && accessToken.isNotEmpty) {
+            options.headers['Cookies'] = accessToken;
+          }
 
           return handler.next(options);
         },
@@ -97,7 +110,16 @@ class Auth {
     );
   }
 
-  String getAuthToken() {
-    return "";
+  void setAuthToken(String accessToken) async {
+    _storage.write(key: "accessToken", value: accessToken);
+    _dioInterceptors(_dio);
+  }
+
+  Future<String?> getAuthToken() async {
+    final accessToken = await _storage.read(key: "accessToken");
+    if (accessToken == null || accessToken.isEmpty) {
+      await logout();
+    }
+    return accessToken;
   }
 }
