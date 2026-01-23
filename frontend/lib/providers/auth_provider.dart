@@ -1,15 +1,41 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-class Auth {
+class AuthProvider with ChangeNotifier {
   final Dio _dio = Dio();
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
 
-  Auth();
+  bool _isAuthenticated = false;
+  bool _isLoading = true;
 
-  void initialize() async {
+  bool get isAuthenticated => _isAuthenticated;
+  bool get isLoading => _isLoading;
+
+  AuthProvider() {
     _dioInterceptors(_dio);
+    _checkAuthStatus();
+  }
+
+  void _checkAuthStatus() async {
+    try {
+      _isLoading = true;
+      notifyListeners();
+
+      final token = await getAuthToken();
+      if (token != null && token.isNotEmpty) {
+        _isAuthenticated = true;
+      } else {
+        _isAuthenticated = false;
+      }
+    } catch (e) {
+      debugPrint("Error checing auth status: $e");
+      _isAuthenticated = false;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
   }
 
   Future<String> registerCustomer(
@@ -45,7 +71,6 @@ class Auth {
 
   Future<String> login(String email, String password) async {
     try {
-      // debugPrint((await getAuthToken()).toString());
       debugPrint("Trying to login...");
       final response = await _dio.post(
         '/auth/login',
@@ -54,6 +79,7 @@ class Auth {
 
       debugPrint('Login response: ${response.data}, ${response.statusCode}');
       setAuthToken(response.data['accessToken']);
+      _checkAuthStatus();
       return "Login bem sucedido";
     } on DioException catch (e) {
       debugPrint(e.response.toString());
@@ -117,9 +143,6 @@ class Auth {
 
   Future<String?> getAuthToken() async {
     final accessToken = await _storage.read(key: "accessToken");
-    if (accessToken == null || accessToken.isEmpty) {
-      await logout();
-    }
     return accessToken;
   }
 }

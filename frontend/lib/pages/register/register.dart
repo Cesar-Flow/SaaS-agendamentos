@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-
-import 'package:frontend/services/auth.dart';
+import 'package:frontend/providers/auth_provider.dart';
 
 class Register extends StatelessWidget {
   Register({super.key});
-  final Auth auth = Auth();
+  final AuthProvider auth = AuthProvider();
 
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();

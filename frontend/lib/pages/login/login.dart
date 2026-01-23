@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:frontend/services/auth.dart';
+import 'package:frontend/providers/auth_provider.dart';
 
 class Login extends StatelessWidget {
   Login({super.key});
@@ -9,7 +9,7 @@ class Login extends StatelessWidget {
   final TextEditingController _passwordController = TextEditingController();
 
   void onLogin() async {
-    final Auth auth = Auth();
+    final AuthProvider auth = AuthProvider();
     final response = await auth.login(
       _emailController.text,
       _passwordController.text,
